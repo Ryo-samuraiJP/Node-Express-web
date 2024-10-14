@@ -33,9 +33,13 @@ app.locals.siteName = 'ROUX Meetups';
 app.use(express.static(path.join(__dirname, './static')));
 
 app.use(async (req, res, next) => {
-  const names = await speakerService.getNames();
-  res.locals.speakerNames = names;
-  return next();
+  try {
+    const names = await speakerService.getNames();
+    res.locals.speakerNames = names;
+    return next();
+  } catch (e) {
+    return next(e);
+  }
 });
 
 app.use('/', routes({ feedbackService, speakerService }));
